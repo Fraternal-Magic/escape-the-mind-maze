@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧩 Escapa do Labirinto da Mente</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ==================== ECRÃ INICIAL ==================== -->
+    <div id="screen-start" class="screen active">
+        <div class="container">
+            <div class="start-content">
+                <div class="brain-animation">
+                    <svg viewBox="0 0 120 120" class="brain-svg">
+                        <defs>
+                            <linearGradient id="brainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6C63FF"/>
+                                <stop offset="50%" style="stop-color:#4ECDC4"/>
+                                <stop offset="100%" style="stop-color:#44CF6C"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="url(#brainGrad)" stroke-width="2" class="pulse-ring"/>
+                        <text x="60" y="68" text-anchor="middle" font-size="45">🧠</text>
+                    </svg>
+                </div>
+                <h1 class="game-title">Escapa do Labirinto<br><span>da Mente</span></h1>
+                <p class="game-subtitle">Uma Escape Room sobre Saúde Mental</p>
+                <div class="divider"></div>
+                <p class="game-description">
+                    Estás preso no labirinto da tua mente. 
+                    A ansiedade, o medo e a solidão fecharam todas as portas.<br><br>
+                    Para escapar, precisas de resolver <strong>6 desafios</strong> que te vão 
+                    ajudar a compreender a importância de cuidar da saúde mental.<br><br>
+                    💚 <em>Cada porta que abres é um passo em direção à luz.</em>
+                </p>
+                <button class="btn btn-primary btn-large" onclick="startGame()">
+                    <span class="btn-icon">🔓</span>
+                    Iniciar Jogo
+                </button>
+                <div class="credits">
+                    <p>Desenvolvido por <strong>Ryan Costa</strong> · Equipa <strong>4EB</strong></p>
+                    <p class="credits-date">Dia Mundial da Saúde Mental · Outubro 2025</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MAPA DO LABIRINTO ==================== -->
+    <div id="screen-map" class="screen">
+        <div class="container">
+            <div class="map-header">
+                <h2>🗺️ Mapa do Labirinto</h2>
+                <p>Resolve cada desafio para abrir a porta seguinte</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">0 / 6</span>
+                </div>
+            </div>
+            <div class="rooms-grid">
+                <!-- Sala 1 -->
+                <div class="room-card" id="room1" onclick="openRoom(1)">
+                    <div class="room-number">1</div>
+                    <div class="room-icon">🔒</div>
+                    <h3>Sala da Descoberta</h3>
+                    <p>O que é a saúde mental?</p>
+                    <div class="room-status" id="status1">Por resolver</div>
+                </div>
+                <!-- Sala 2 -->
+                <div class="room-card locked" id="room2" onclick="openRoom(2)">
+                    <div class="room-number">2</div>
+                    <div class="room-icon">🔒</div>
+                    <h3>Sala dos Mitos</h3>
+                    <p>Mito ou Facto?</p>
+                    <div class="room-status" id="status2">Trancada</div>
+                </div>
+                <!-- Sala 3 -->
+                <div class="room-card locked" id="room3" onclick="openRoom(3)">
+                    <div class="room-number">3</div>
+                    <div class="room-icon">🔒</div>
+                    <h3>Sala dos Sinais</h3>
+                    <p>Reconhecer quem precisa de ajuda</p>
+                    <div class="room-status" id="status3">Trancada</div>
+                </div>
+                <!-- Sala 4 -->
+                <div class="room-card locked" id="room4" onclick="openRoom(4)">
+                    <div class="room-number">4</div>
+                    <div class="room-icon">🔒</div>
+                    <h3>Sala da Empatia</h3>
+                    <p>E se fosse contigo?</p>
+                    <div class="room-status" id="status4">Trancada</div>
+                </div>
+                <!-- Sala 5 -->
+                <div class="room-card locked" id="room5" onclick="openRoom(5)">
+                    <div class="room-number">5</div>
+                    <div class="room-icon">🔒</div>
+                    <h3>Sala das Estratégias</h3>
+                    <p>Cuidar da mente no dia a dia</p>
+                    <div class="room-status" id="status5">Trancada</div>
+                </div>
+                <!-- Sala 6 -->
+                <div class="room-card locked" id="room6" onclick="openRoom(6)">
+                    <div class="room-number">6</div>
+                    <div class="room-icon">🔒</div>
+                    <h3>Sala da Coragem</h3>
+                    <p>A força de pedir ajuda</p>
+                    <div class="room-status" id="status6">Trancada</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ECRÃ DE DESAFIO ==================== -->
+    <div id="screen-challenge" class="screen">
+        <div class="container">
+            <div class="challenge-wrapper">
+                <button class="btn-back" onclick="backToMap()">← Voltar ao Mapa</button>
+                <div class="challenge-header">
+                    <div class="challenge-room-number" id="challengeRoomNumber"></div>
+                    <h2 id="challengeTitle"></h2>
+                    <p id="challengeDescription" class="challenge-desc"></p>
+                </div>
+                <div class="challenge-content" id="challengeContent">
+                    <!-- Conteúdo dinâmico -->
+                </div>
+                <div class="challenge-feedback" id="challengeFeedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ECRÃ FINAL ==================== -->
+    <div id="screen-victory" class="screen">
+        <div class="container">
+            <div class="victory-content">
+                <div class="victory-icon">🌟</div>
+                <h1>Escapaste do Labirinto!</h1>
+                <div class="victory-divider"></div>
+                <p class="victory-message">
+                    Parabéns! Conseguiste abrir todas as portas.<br><br>
+                    Aprendeste que a saúde mental é tão importante como a saúde física, 
+                    que reconhecer sinais é um ato de atenção, e que 
+                    <strong>pedir ajuda é um ato de coragem</strong>.
+                </p>
+                <div class="victory-quote">
+                    <span class="quote-mark">"</span>
+                    <p>Cuidar da saúde mental é cuidar da vida.</p>
+                    <span class="quote-mark">"</span>
+                </div>
+                <div class="victory-stats">
+                    <div class="stat">
+                        <span class="stat-number" id="statRooms">6</span>
+                        <span class="stat-label">Salas Resolvidas</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="statTime">--:--</span>
+                        <span class="stat-label">Tempo Total</span>
+                    </div>
+                </div>
+                <div class="help-numbers">
+                    <h3>📞 Se precisares de ajuda, liga:</h3>
+                    <div class="help-cards">
+                        <div class="help-card">
+                            <strong>SNS 24 — Saúde Mental</strong>
+                            <span>808 242 424</span>
+                        </div>
+                        <div class="help-card">
+                            <strong>SOS Voz Amiga</strong>
+                            <span>213 544 545</span>
+                        </div>
+                        <div class="help-card">
+                            <strong>Linha Jovem</strong>
+                            <span>800 208 020</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-large" onclick="restartGame()">
+                    <span class="btn-icon">🔄</span>
+                    Jogar Novamente
+                </button>
+                <div class="credits">
+                    <p>Desenvolvido por <strong>Ryan Costa</strong> · Equipa <strong>4EB</strong></p>
+                    <p>💚 Dia Mundial da Saúde Mental · Outubro 2025</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
